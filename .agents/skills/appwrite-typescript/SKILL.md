@@ -358,7 +358,7 @@ const file2 = await storage.createFile({
 const files = await storage.listFiles({ bucketId: '[BUCKET_ID]' });
 
 // Get file preview (image)
-const preview = storage.getFilePreview({
+const preview = storage.getFileView({
     bucketId: '[BUCKET_ID]',
     fileId: '[FILE_ID]',
     width: 300,
