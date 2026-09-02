@@ -5,6 +5,7 @@ import {login} from '../features/authSlice.js'
 import {Button, Input, Logo} from './index.js'
 import {useDispatch} from 'react-redux'
 import {useForm} from 'react-hook-form'
+import userService from "../appwrite/userService";
 
 function SignUp() {
     const navigate = useNavigate()
@@ -13,17 +14,32 @@ function SignUp() {
     const {register,handleSubmit}= useForm()
     const create = async(data)=>{
         setError("")
-        try {
-            const userData=await authService.createAccount(data)
-            if(userData){
-                const currentUser = await authService.
-                getCurrentUser()
-                if(currentUser) dispatch(login(currentUser));
-                navigate("/")
+         try {
+        // 1. Create Appwrite authentication account
+        const userData = await authService.createAccount(data);
+
+        if (userData) {
+            // 2. Get the authenticated user
+            const currentUser = await authService.getCurrentUser();
+
+            if (currentUser) {
+                // 3. Create user row in User table
+                await userService.createUser({
+                    userId: currentUser.$id,
+                    name: currentUser.name,
+                    email: currentUser.email,
+                });
+
+                // 4. Store user in Redux
+                dispatch(login(currentUser));
+
+                // 5. Go home
+                navigate("/");
             }
-        } catch (error) {
-            setError(error.message)
         }
+    } catch (error) {
+        setError(error.message);
+    }
     }
   return (
      <div className="flex items-center justify-center">

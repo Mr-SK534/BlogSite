@@ -83,9 +83,9 @@ export class Service {
     }
 
     // Synchronous — do not await this method
-    getFilePreview(fileId) {
+    getFileView(fileId) {
         if (!fileId) return null;
-        return this.bucket.getFilePreview(config.appwriteBucketID, fileId);
+        return this.bucket.getFileView(config.appwriteBucketID, fileId);
     }
 }
 
